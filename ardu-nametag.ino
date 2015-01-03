@@ -9,9 +9,10 @@ char* name = "Alexander R. Schrab";
 
 char* titles[] = {"Master", "Amateur", "Hobby", "Senior", "Junior", "Certified"};
 int numTitles = 6;
-char* roles[] = {"Programmer", "Coffee Maker", "Carpenter", "Hacker", "Whiner"};
+char* roles[] = {"Programmer", "Coffee Maker", "Complicator", "Hacker", "Whiner"};
 int numRoles = 5;
 
+char buffer[16*2];
 
 void setup() {
   slcd.begin();
@@ -38,14 +39,14 @@ void loop() {
    
   for (int y = 0; y < 2; y++) {
     for (int x = 0; x < 16; x++) {
-      slcd.setCursor(x,y);
+      int bufferIndex = y*16+x;
       
       if (y == 0) {
         // print name
         if (x >= nameStartX && x < nameStartX+nameLen) {
-          slcd.print(name[x-nameStartX]);
+          buffer[bufferIndex] = name[x-nameStartX];
         } else {
-          slcd.print(' ');
+          buffer[bufferIndex] = ' ';
         }
       }
       
@@ -55,19 +56,24 @@ void loop() {
         
         if (titleChar >= 0 && titleChar < titleLen + roleLen + 1) {
           if (titleChar < titleLen) {
-            slcd.print(title[titleChar]);
+            buffer[bufferIndex] = title[titleChar];
           } else if (titleChar == titleLen) {
-            slcd.print(' ');
+            buffer[bufferIndex] = ' ';
           } else {
-            slcd.print(role[titleChar-titleLen-1]);
+            buffer[bufferIndex] = role[titleChar-titleLen-1];
           } 
         } else {
-          slcd.print(' ');
+          buffer[bufferIndex] = ' ';
         }
       }
     }
   }
   
+  slcd.setCursor(0,0);
+  slcd.print(buffer, 16);
+  slcd.setCursor(0,1);
+  slcd.print(buffer+16, 16);
+     
   // Reset states  
   if (nameStartX <= -nameLen) {
     nameState = -1;
@@ -78,7 +84,6 @@ void loop() {
     titleIndex = random(0, numTitles);
     roleIndex = random(0, numRoles);
   }
-
 
   nameState++;
   titleState++;
