@@ -20,6 +20,7 @@ void setup() {
 }
 
 int nameState = 0;
+
 int titleState = 0;
 int titleIndex = 0;
 int roleIndex = 0;
@@ -70,9 +71,9 @@ void loop() {
   }
   
   slcd.setCursor(0,0);
-  slcd.print(buffer, 16);
+  slcd.write(buffer, 16);
   slcd.setCursor(0,1);
-  slcd.print(buffer+16, 16);
+  slcd.write(buffer+16, 16);
      
   // Reset states  
   if (nameStartX <= -nameLen) {
